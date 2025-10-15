@@ -8,7 +8,7 @@ export interface FluentValidationError {
 
 export interface CustomApiError {
     error: string;
-    details: string[];
+    details?: string[];
 }
 
 export type ErrorResponse = FluentValidationError | CustomApiError;
