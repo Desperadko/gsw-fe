@@ -7,8 +7,6 @@ import { AuthProvider } from "./Hooks/AuthProvider"
 import { ROUTES } from "./Constants/RoutesConstants"
 
 function App() {
-  console.log("rendered");
-
   return (
     <>
       <AuthProvider>
