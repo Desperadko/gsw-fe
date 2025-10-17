@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AccountService } from "../../../Services/AccountService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Hooks/AuthProvider";
+import { ROUTES } from "../../../Constants/RoutesConstants";
 
 function Home() {
     const { logout } = useAuth();
@@ -15,7 +16,7 @@ function Home() {
 
     function handleLogout() {
         logout();
-        navigate("/login");
+        navigate(ROUTES.LOGIN);
     }
 
     if(isLoading) return <div>Loading...</div>

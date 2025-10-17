@@ -3,6 +3,7 @@ import { AccountService } from "../../../Services/AccountService";
 import { useNavigate } from "react-router-dom";
 import type { ApplicationError } from "../../../Types/Error";
 import { useAuth } from "../../../Hooks/AuthProvider";
+import { ROUTES } from "../../../Constants/RoutesConstants";
 
 function Login() {
     const [username, setUsername] = useState<string>("");
@@ -22,7 +23,7 @@ function Login() {
         .then(response => {
             login(response.token);
             setLoading(false);
-            navigate("/");
+            navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
             setLoading(false);
@@ -32,7 +33,7 @@ function Login() {
     }
 
     function redirectToRegister() {
-        navigate("/register");
+        navigate(ROUTES.REGISTER);
     }
     
     if(loading) return <div>Loading...</div>

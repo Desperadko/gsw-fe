@@ -4,6 +4,7 @@ import Register from "./Core/Pages/Register/Register"
 import Login from "./Core/Pages/Login/Login"
 import ProtectedRoute from "./Wrappers/ProtectedRoute"
 import { AuthProvider } from "./Hooks/AuthProvider"
+import { ROUTES } from "./Constants/RoutesConstants"
 
 function App() {
   console.log("rendered");
@@ -12,9 +13,9 @@ function App() {
     <>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+          <Route path={ROUTES.HOME} element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
+          <Route path={ROUTES.REGISTER} element={<Register />}></Route>
+          <Route path={ROUTES.LOGIN} element={<Login />}></Route>
         </Routes>
       </AuthProvider>
     </>
