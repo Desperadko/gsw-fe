@@ -1,7 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { environment } from "./Environments/environment.dev";
 import { SESSION_STORAGE_CONSTANTS } from "../Constants/SessionStorageConstants";
-import type { ErrorResponse } from "../Types/Error";
+import type { ApplicationError, FluentValidationError, ErrorResponse, UnifiedError } from "../Types/Error";
 
 export const apiInstance = axios.create({
     baseURL: environment.url,
@@ -28,14 +28,14 @@ apiInstance.interceptors.request.use(
 
 apiInstance.interceptors.response.use(
     (config) => { return config; },
-    (error: AxiosError<ErrorResponse>) => {
+    (error: AxiosError<UnifiedError>) => {
         if(error.response){
             const {status, data} = error.response;
             
             switch(status){
                 case 401: {
                     sessionStorage.removeItem(SESSION_STORAGE_CONSTANTS.JWT);
-                    window.location.replace("/login"); //TEMPORARY, TO BE CHANGED WITH PROPER ROUTE (account/login - routes constants?)
+                    window.location.replace("/login"); //TEMPORARY, TO BE CHANGED TO RECEIVE A NEW ACCESS TOKEN VIA REFRESH TOKEN
                 }
             }
     
@@ -44,25 +44,30 @@ apiInstance.interceptors.response.use(
     
             //scuffed way to determine which of the two error types is used
             //  (FluentValidation error or the API's custom error)
-            if("traceId" in data){
+            if(data && isFluentValidationError(data)){
                 errorMessage = data.title;
                 fieldErrors = data.errors
             }
-            else if("error" in data){
-                errorMessage = data.error
+            else if(data && isCustomApiError(data)){
+                errorMessage = data.message
                 //skipping 'details' property for now
             }
 
-            const unifiedError = new Error(errorMessage) as Error & {
-                fieldErrors?: Record<string, string[]>;
-                statusCode?: number;
-            };
-            unifiedError.fieldErrors = fieldErrors;
-            unifiedError.statusCode = status;
+            const applicationError = new Error(errorMessage) as ApplicationError
+            applicationError.details = fieldErrors;
+            applicationError.statusCode = status;
 
-            return Promise.reject(unifiedError);
+            return Promise.reject(applicationError);
         }
         
         return Promise.reject(new Error("Network error"));
     }
 );
+
+function isFluentValidationError(error: UnifiedError): error is FluentValidationError {
+    return "traceId" in error;
+}
+
+function isCustomApiError(error: UnifiedError): error is ErrorResponse {
+    return "message" in error;
+}
