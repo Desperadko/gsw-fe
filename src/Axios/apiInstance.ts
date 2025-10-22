@@ -2,6 +2,8 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { environment } from "./Environments/environment.dev";
 import { SESSION_STORAGE_CONSTANTS } from "../Constants/SessionStorageConstants";
 import type { ApplicationError, FluentValidationError, ErrorResponse, UnifiedError } from "../Types/Error";
+import { AccountService } from "../Services/AccountService";
+import { ROUTES } from "../Constants/RoutesConstants";
 
 export const apiInstance = axios.create({
     baseURL: environment.url,
@@ -34,9 +36,24 @@ apiInstance.interceptors.response.use(
             
             switch(status){
                 case 401: {
-                    sessionStorage.removeItem(SESSION_STORAGE_CONSTANTS.JWT);
-                    window.location.replace("/login"); //TEMPORARY, TO BE CHANGED TO RECEIVE A NEW ACCESS TOKEN VIA REFRESH TOKEN
+                    const token = sessionStorage.getItem(SESSION_STORAGE_CONSTANTS.JWT);
+                    if(token){
+                        AccountService.refresh({token})
+                            .then(response => {
+                                sessionStorage.setItem(SESSION_STORAGE_CONSTANTS.JWT, response.token);
+                                window.location.replace(ROUTES.HOME);
+                            })
+                            .catch(() => {
+                                window.location.replace(ROUTES.LOGIN);
+                            })
+                    }
+                    else{
+                        window.location.replace(ROUTES.LOGIN);
+                    }
+                    break;
                 }
+                default:
+                    break;
             }
     
             let errorMessage = "An error occured";

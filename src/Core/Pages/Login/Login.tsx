@@ -22,13 +22,14 @@ function Login() {
         AccountService.login({username, password})
         .then(response => {
             login(response.token);
-            setLoading(false);
             navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
-            setLoading(false);
             setError(error.message);
             setErrors(error.details);
+        })
+        .finally(() => {
+            setLoading(false);
         })
     }
 
