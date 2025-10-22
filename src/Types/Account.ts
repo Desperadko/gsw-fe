@@ -19,6 +19,18 @@ export interface LoginResponse {
     account: AccountDTO;
 }
 
+export interface RefreshRequest {
+    token: string;
+}
+
+export interface RefreshResponse {
+    token: string;
+}
+
+export interface LogoutResponse {
+    message: string;
+}
+
 export interface AccountDTO {
     username: string;
     email: string;

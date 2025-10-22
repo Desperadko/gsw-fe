@@ -24,14 +24,15 @@ function Register() {
         .register({ username, email, password })
         .then(response => {
             login(response.token)
-            setLoading(false);
             navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
-            setLoading(false);
             setError(error.message);
             setErrors(error.details);
-        });
+        })
+        .finally(() => {
+            setLoading(false);
+        })
     };
 
     function redirectToLogin() {
