@@ -60,7 +60,7 @@ function Register() {
                 <p>{errors.Email}</p>
             )}
             <input
-                type="text"
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"/>

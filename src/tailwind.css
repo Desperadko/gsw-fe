@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "./main.scss";
+
+@theme{
+    --color-floral-white: #fffcf2ff;
+    --color-timberwolf: #ccc5b9ff;
+    --color-black-olive: #403d39ff;
+    --color-eerie-black: #252422ff;
+    --color-flame: #eb5e28ff;
+}

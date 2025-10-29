@@ -40,7 +40,7 @@ function Login() {
     if(loading) return <div>Loading...</div>
 
     return(
-        <div>
+        <div className="flex justify-around items-center">
             <input
                 type="text"
                 value={username}
@@ -50,7 +50,7 @@ function Login() {
                 <p>{errors.Username}</p>
             )}
             <input
-                type="text"
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"/>
@@ -60,7 +60,7 @@ function Login() {
             {error && !error.includes("validation") && (
                 <p className="mt-2">{error}</p>
             )}
-            <button onClick={handleLogin}>Submit</button>
+            <button className="" onClick={handleLogin}>Submit</button>
             <button onClick={redirectToRegister}>Don't have an account?</button>
         </div>
     );
