@@ -11,6 +11,7 @@ function NavLink({to, children, className}: {to: string, children: React.ReactNo
                 }
                 border-b-2
                 transition-colors duration-200
+                w-fit
                 ${className}
                 `}
             >

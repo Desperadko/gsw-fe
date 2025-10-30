@@ -56,13 +56,13 @@ function Header({authenticated} : {authenticated: boolean}) {
     if(error) return <div>{error}</div>
 
     return(
-        <div className="bg-eerie-black pt-2 pb-4 border-b-1 border-floral-white">
+        <div className="bg-eerie-black border-b-1 border-floral-white py-4">
             <div className="flex justify-between max-w-screen-lg mx-auto px-5">
                 <nav className="flex gap-10">
                     <img
                         src={logo}
                         alt="GSW Logo"
-                        className="w-32 rounded-2xl cursor-pointer"
+                        className="w-32 cursor-pointer"
                         onClick={redirectToHome}/>
                     <div className="flex items-center gap-4">
                         <NavLink
