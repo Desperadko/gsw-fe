@@ -8,16 +8,20 @@ import type { ApplicationError } from "../../../../Types/Error";
 import NavLink from "../NavLink/NavLink";
 import { useAuth } from "../../../../Hooks/AuthProvider";
 
-function Header({authenticated} : {authenticated: boolean}) {
+function Header() {
     const [account, setAccount] = useState<AccountDTO | undefined>(undefined);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
-    const { logout } = useAuth();
+    const { logout, isAuthenticated } = useAuth();
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
-        setLoading(true);
+        if(!isAuthenticated) return;
 
+        setLoading(true);
+        
         AccountService.getCurrent()
             .then(response => {
                 setAccount(response);
@@ -28,9 +32,8 @@ function Header({authenticated} : {authenticated: boolean}) {
             .finally(() => {
                 setLoading(false);
             })
-    }, [])
 
-    const navigate = useNavigate();
+    }, [isAuthenticated])
 
     function redirectToHome() {
         navigate(ROUTES.HOME);
@@ -82,8 +85,8 @@ function Header({authenticated} : {authenticated: boolean}) {
                         </NavLink>
                     </div>
                 </nav>
-                <nav className="flex items-center gap-6">
-                {authenticated && account
+                <nav className="flex items-center gap-4">
+                {isAuthenticated && account
                 ?
                     <div className="flex gap-4">
                         <NavLink
@@ -98,11 +101,11 @@ function Header({authenticated} : {authenticated: boolean}) {
                         </button>
                     </div>
                 :
-                    <div>
+                    <div className="flex items-center gap-4">
                         <NavLink
                             to={ROUTES.REGISTER}
                             className="text-md">
-                                Sign in
+                                Sign up
                         </NavLink>
                         <NavLink
                             to={ROUTES.LOGIN}
