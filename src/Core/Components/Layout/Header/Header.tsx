@@ -66,7 +66,7 @@ function Header({authenticated} : {authenticated: boolean}) {
                         onClick={redirectToHome}/>
                     <div className="flex items-center gap-4">
                         <NavLink
-                            to={ROUTES.HOME}
+                            to={ROUTES.TESTING}
                             className="text-lg">
                                 Browse
                         </NavLink>
