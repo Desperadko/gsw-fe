@@ -1,7 +1,5 @@
 import { AccountService } from "../../../Services/AccountService";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Hooks/AuthProvider";
-import { ROUTES } from "../../../Constants/RoutesConstants";
 import { useEffect, useState } from "react";
 import type { AccountDTO } from "../../../Types/Account";
 import type { ApplicationError } from "../../../Types/Error";
@@ -11,37 +9,25 @@ function Home() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    const { logout } = useAuth();
-
-    const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
-        const getCurrentAccount = async () => {
-            setLoading(true);
+        if(!isAuthenticated) return;
 
-            AccountService.getCurrent()
-                .then(response => {
-                    setAccount(response);
-                })
-                .catch((error: ApplicationError) => {
-                    setError(error.message);
-                })
-                .finally(() => {
-                    setLoading(false);
-                })
-        }
+        setLoading(true);
 
-        getCurrentAccount();
-    }, [])
-
-    function handleLogout() {
-        AccountService.logout()
+        AccountService.getCurrent()
             .then(response => {
-                console.log(response.message)
+                setAccount(response);
             })
-        logout();
-        navigate(ROUTES.LOGIN);
-    }
+            .catch((error: ApplicationError) => {
+                setError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
+
+    }, [isAuthenticated])
 
     if(loading) return <div>Loading...</div>
 
@@ -53,7 +39,6 @@ function Home() {
             {error && (
                 <p>{error}</p>
             )}
-            <button onClick={handleLogout}>Logout</button>
         </div>
     )
 }
