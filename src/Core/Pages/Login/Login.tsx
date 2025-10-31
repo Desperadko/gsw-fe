@@ -60,7 +60,7 @@ function Login() {
             {error && !error.includes("validation") && (
                 <p className="mt-2">{error}</p>
             )}
-            <button className="" onClick={handleLogin}>Submit</button>
+            <button onClick={handleLogin}>Submit</button>
             <button onClick={redirectToRegister}>Don't have an account?</button>
         </div>
     );

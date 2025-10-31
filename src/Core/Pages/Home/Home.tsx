@@ -1,7 +1,5 @@
 import { AccountService } from "../../../Services/AccountService";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Hooks/AuthProvider";
-import { ROUTES } from "../../../Constants/RoutesConstants";
 import { useEffect, useState } from "react";
 import type { AccountDTO } from "../../../Types/Account";
 import type { ApplicationError } from "../../../Types/Error";
@@ -11,9 +9,7 @@ function Home() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    const { logout, isAuthenticated } = useAuth();
-
-    const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         if(!isAuthenticated) return;
