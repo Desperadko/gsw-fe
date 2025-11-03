@@ -5,6 +5,7 @@ import type { ApplicationError } from "../../../Types/Error";
 import { useAuth } from "../../../Hooks/AuthProvider";
 import { ROUTES } from "../../../Constants/RoutesConstants";
 import logo from "../../../Assets/logo.png"
+import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 
 interface LoginErrors {
     general: string;
@@ -16,11 +17,8 @@ function Login() {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [errors, setErrors] = useState<LoginErrors>({
-        general: '',
-        username: '',
-        password: ''
-    });
+
+    const {errors, processError, clearErrors} = useErrorHandler();
 
     const { login } = useAuth();
 
@@ -29,11 +27,7 @@ function Login() {
     function handleLogin() {
         setLoading(true);
 
-        setErrors({
-            general: "",
-            username: "",
-            password: ""
-        })
+        clearErrors(["username", "password"]);
 
         AccountService.login({username, password})
         .then(response => {
@@ -41,40 +35,7 @@ function Login() {
             navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
-            if(error.details){
-                const newErrors: LoginErrors = { general: "", username: "", password: "" }
-
-                Object.entries(error.details).forEach(([fieldName, messages]: [string, string[]]) => {
-                    const field = fieldName.toLowerCase() as keyof LoginErrors;
-                    if(field === "username" || field === "password"){
-                        newErrors[field] = messages[0];
-                    }
-                })
-
-                setErrors(newErrors);
-            }
-            else if(error.field){
-                const field = error.field.toLowerCase();
-
-                if(field === "username" || field === "password"){
-                    setErrors(prev => ({
-                        ...prev,
-                        [field]: error.message
-                    }))
-                }
-                else{
-                    setErrors(prev => ({
-                        ...prev,
-                        general: error.message
-                    }))
-                }
-            }
-            else{
-                setErrors(prev => ({
-                        ...prev,
-                        general: error.message
-                    }))
-            }
+            processError(error, ["username", "password"])
         })
         .finally(() => {
             setLoading(false);
