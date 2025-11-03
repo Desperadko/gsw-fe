@@ -33,6 +33,27 @@ apiInstance.interceptors.response.use(
     (error: AxiosError<UnifiedError>) => {
         if(error.response){
             const {status, data} = error.response;
+
+            let generalErrorMessage = "An error occured";
+            let apiFieldError: string | undefined;
+            let validationFieldErrors: Record<string, string[]> | undefined;
+    
+            //scuffed way to determine which of the two error types is used
+            //  (FluentValidation error or the API's custom error)
+            if(data && isFluentValidationError(data)){
+                generalErrorMessage = data.title;
+                validationFieldErrors = data.errors;
+            }
+            else if(data && isCustomApiError(data)){
+                generalErrorMessage = data.message;
+                apiFieldError = data.field;
+                //skipping 'details' property for now
+            }
+
+            const applicationError = new Error(generalErrorMessage) as ApplicationError
+            applicationError.field = apiFieldError;
+            applicationError.details = validationFieldErrors;
+            applicationError.statusCode = status;
             
             switch(status){
                 case 401: {
@@ -47,6 +68,9 @@ apiInstance.interceptors.response.use(
                                 window.location.replace(ROUTES.LOGIN);
                             })
                     }
+                    else if(apiFieldError || validationFieldErrors){
+                        return Promise.reject(applicationError);
+                    }
                     else{
                         window.location.replace(ROUTES.LOGIN);
                     }
@@ -55,24 +79,6 @@ apiInstance.interceptors.response.use(
                 default:
                     break;
             }
-    
-            let errorMessage = "An error occured";
-            let fieldErrors: Record<string, string[]> | undefined;
-    
-            //scuffed way to determine which of the two error types is used
-            //  (FluentValidation error or the API's custom error)
-            if(data && isFluentValidationError(data)){
-                errorMessage = data.title;
-                fieldErrors = data.errors
-            }
-            else if(data && isCustomApiError(data)){
-                errorMessage = data.message
-                //skipping 'details' property for now
-            }
-
-            const applicationError = new Error(errorMessage) as ApplicationError
-            applicationError.details = fieldErrors;
-            applicationError.statusCode = status;
 
             return Promise.reject(applicationError);
         }
@@ -86,5 +92,5 @@ function isFluentValidationError(error: UnifiedError): error is FluentValidation
 }
 
 function isCustomApiError(error: UnifiedError): error is ErrorResponse {
-    return "message" in error;
+    return "message" in error && "field" in error;
 }
