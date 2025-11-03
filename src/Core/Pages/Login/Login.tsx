@@ -7,12 +7,6 @@ import { ROUTES } from "../../../Constants/RoutesConstants";
 import logo from "../../../Assets/logo.png"
 import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 
-interface LoginErrors {
-    general: string;
-    username: string;
-    password: string;
-}
-
 function Login() {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
