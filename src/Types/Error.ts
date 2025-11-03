@@ -8,6 +8,7 @@ export interface FluentValidationError {
 
 export interface ErrorResponse {
     message: string;
+    field? : string;
     details?: string[];
 }
 
@@ -15,6 +16,7 @@ export interface ErrorResponse {
 export type UnifiedError = FluentValidationError | ErrorResponse;
 
 export interface ApplicationError extends Error {
+    field?: string;
     details?: Record<string, string[]>;
     statusCode: number;
 }

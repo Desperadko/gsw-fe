@@ -4,14 +4,18 @@ import { useNavigate } from "react-router-dom";
 import type { ApplicationError } from "../../../Types/Error";
 import { useAuth } from "../../../Hooks/AuthProvider";
 import { ROUTES } from "../../../Constants/RoutesConstants";
+import { useErrorHandler } from "../../../Hooks/useErrorHandler";
+import logo from "../../../Assets/logo.png"
 
 function Register() {
+    const fieldNames: string[] = ["username", "email", "password"];
+
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
-    const [errors, setErrors] = useState<Record<string, string[]> | undefined>({});
+    
+    const { errors, processError, clearErrors } = useErrorHandler();
 
     const { login } = useAuth();
 
@@ -20,6 +24,8 @@ function Register() {
     function handleRegister() {
         setLoading(true);
 
+        clearErrors(fieldNames);
+
         AccountService
         .register({ username, email, password })
         .then(response => {
@@ -27,8 +33,7 @@ function Register() {
             navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
-            setError(error.message);
-            setErrors(error.details);
+            processError(error, fieldNames)
         })
         .finally(() => {
             setLoading(false);
@@ -42,36 +47,89 @@ function Register() {
     if(loading) return <div>Loading...</div>
 
     return(
-        <div>
-            <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"/>
-            {errors && errors.Username && (
-                <p>{errors.Username}</p>
-            )}
-            <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"/>
-            {errors && errors.Email && (
-                <p>{errors.Email}</p>
-            )}
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"/>
-            {errors && errors.Password && (
-                <p>{errors.Password}</p>
-            )}
-            {error && !error.includes("validation") && (
-                <p className="mt-2">{error}</p>
-            )}
-            <button onClick={handleRegister}>Submit</button>
-            <button onClick={redirectToLogin}>Already have an account?</button>
+        <div
+            className="
+                flex flex-col justify-center items-center
+                bg-eerie-black
+                max-w-150
+                sm:mx-auto mx-5 my-10">
+            <img
+                src={logo}
+                alt="GSW Logo"
+                className="border-b-1 border-b-floral-white"/>
+            <div className="flex flex-col justify-center items-center gap-6 my-10">
+                <h1
+                    className="
+                        text-2xl text-floral-white font-bold">
+                    Register
+                </h1>
+                <div className="flex flex-col gap-4">
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Username"
+                        className="
+                            text-floral-white
+                            border-b-1 border-floral-white
+                            p-2"/>
+                    {errors && errors.username && (
+                        <p className="text-red-500 font-semibold">
+                            {errors.username}
+                        </p>
+                    )}
+                    <input
+                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        className="
+                            text-floral-white
+                            border-b-1 border-floral-white
+                            p-2"/>
+                    {errors && errors.email && (
+                        <p className="text-red-500 font-semibold">
+                            {errors.email}
+                        </p>
+                    )}
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        className="
+                            text-floral-white
+                            border-b-1 border-floral-white
+                            p-2"/>
+                    {errors && errors.password && (
+                        <p className="text-red-500 font-semibold">
+                            {errors.password}
+                        </p>
+                    )}
+                </div>
+                <div className="flex justify-center items-center flex-col gap-4">
+                    <button
+                        onClick={handleRegister}
+                        className="
+                            bg-flame hover:bg-floral-white
+                            text-floral-white hover:text-flame
+                            font-semibold hover:font-bold
+                            rounded-2xl px-15 py-1
+                            transition duration-100">
+                            Submit
+                    </button>
+                    <button
+                        onClick={redirectToLogin}
+                        className="text-floral-white font-semibold">
+                            Don't have an account?
+                    </button>
+                    {errors && errors.general && (
+                        <p className="text-red-500 font-semibold">
+                            {errors.general}
+                        </p>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
