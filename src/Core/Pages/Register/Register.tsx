@@ -8,6 +8,8 @@ import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 import logo from "../../../Assets/logo.png"
 
 function Register() {
+    const fieldNames: string[] = ["username", "email", "password"];
+
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -22,7 +24,7 @@ function Register() {
     function handleRegister() {
         setLoading(true);
 
-        clearErrors(["username", "email", "password"]);
+        clearErrors(fieldNames);
 
         AccountService
         .register({ username, email, password })
@@ -31,7 +33,7 @@ function Register() {
             navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
-            processError(error, ["username", "email", "password"])
+            processError(error, fieldNames)
         })
         .finally(() => {
             setLoading(false);

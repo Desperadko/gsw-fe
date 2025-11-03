@@ -8,6 +8,8 @@ import logo from "../../../Assets/logo.png"
 import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 
 function Login() {
+    const fieldNames: string[] = ["username", "password"];
+
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +23,7 @@ function Login() {
     function handleLogin() {
         setLoading(true);
 
-        clearErrors(["username", "password"]);
+        clearErrors(fieldNames);
 
         AccountService.login({username, password})
         .then(response => {
@@ -29,7 +31,7 @@ function Login() {
             navigate(ROUTES.HOME);
         })
         .catch((error: ApplicationError) => {
-            processError(error, ["username", "password"])
+            processError(error, fieldNames)
         })
         .finally(() => {
             setLoading(false);
