@@ -1,3 +1,4 @@
+import type { BaseDTO } from "../General/Base";
 import type { AccountDTO } from "./Account";
 
 export interface RegisterRequest {
@@ -9,7 +10,7 @@ export interface RegisterResponse {
     account: AccountDTO;
 }
 
-export interface AccountRegisterDTO{
+export interface AccountRegisterDTO extends BaseDTO {
     username: string;
     email: string;
     password: string;
