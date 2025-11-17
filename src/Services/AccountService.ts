@@ -1,6 +1,10 @@
 import { apiInstance } from "../Axios/apiInstance";
 import { API_ENDPOINTS_CONSTANTS } from "../Constants/APIEndpointsConstants";
-import type { AccountDTO, LoginRequest, LoginResponse, LogoutResponse, RefreshRequest, RefreshResponse, RegisterRequest, RegisterResponse } from "../Types/Account";
+import type { AccountDTO } from "../Types/Account/Account";
+import type { LoginRequest, LoginResponse } from "../Types/Account/Login";
+import type { LogoutResponse } from "../Types/Account/Logout";
+import type { RefreshRequest, RefreshResponse } from "../Types/Account/Refresh";
+import type { RegisterRequest, RegisterResponse } from "../Types/Account/Register";
 
 export const AccountService = {
     get: async (username: string) => {

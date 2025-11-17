@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { ROUTES } from "../../../../Constants/RoutesConstants";
 import logo from "../../../../Assets/logo.png"
 import { useEffect, useState } from "react";
-import type { AccountDTO } from "../../../../Types/Account";
+import type { AccountDTO } from "../../../../Types/Account/Account";
 import { AccountService } from "../../../../Services/AccountService";
 import type { ApplicationError } from "../../../../Types/Error";
 import NavLink from "../NavLink/NavLink";

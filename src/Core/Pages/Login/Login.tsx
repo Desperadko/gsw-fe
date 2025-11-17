@@ -25,7 +25,7 @@ function Login() {
 
         clearErrors(fieldNames);
 
-        AccountService.login({username, password})
+        AccountService.login({credentials: {username, password}})
         .then(response => {
             login(response.token);
             navigate(ROUTES.HOME);

@@ -27,7 +27,7 @@ function Register() {
         clearErrors(fieldNames);
 
         AccountService
-        .register({ username, email, password })
+        .register({credentials: { username, email, password }})
         .then(response => {
             login(response.token)
             navigate(ROUTES.HOME);

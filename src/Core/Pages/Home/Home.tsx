@@ -1,7 +1,7 @@
 import { AccountService } from "../../../Services/AccountService";
 import { useAuth } from "../../../Hooks/AuthProvider";
 import { useEffect, useState } from "react";
-import type { AccountDTO } from "../../../Types/Account";
+import type { AccountDTO } from "../../../Types/Account/Account";
 import type { ApplicationError } from "../../../Types/Error";
 
 function Home() {
