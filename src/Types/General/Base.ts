@@ -1,1 +1,4 @@
-export interface BaseDTO {}
+export interface BaseDTO {
+    id: number;
+    name: string;
+}

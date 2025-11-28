@@ -7,6 +7,7 @@ import { AccountService } from "../../../../Services/AccountService";
 import type { ApplicationError } from "../../../../Types/Error";
 import NavLink from "../NavLink/NavLink";
 import { useAuth } from "../../../../Hooks/AuthProvider";
+import { ROLES } from "../../../../Constants/RolesConstants";
 
 function Header() {
     const [account, setAccount] = useState<AccountDTO | undefined>(undefined);
@@ -94,6 +95,13 @@ function Header() {
                             className="text-lg">
                                 {account.username}
                         </NavLink>
+                        {account.role && account.role === ROLES.ADMIN && (
+                            <NavLink
+                                to={ROUTES.ADMIN}
+                                className="text-lg">
+                                    Admin
+                            </NavLink>
+                        )}
                         <button
                             onClick={handleLogout}
                             className="text-lg border-b-2 hover:border-floral-white border-transparent">

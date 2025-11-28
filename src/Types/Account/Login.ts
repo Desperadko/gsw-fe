@@ -1,4 +1,3 @@
-import type { BaseDTO } from "../General/Base";
 import type { AccountDTO } from "./Account";
 
 export interface LoginRequest {
@@ -10,7 +9,7 @@ export interface LoginResponse {
     account: AccountDTO;
 }
 
-export interface AccountLoginDTO extends BaseDTO {
+export interface AccountLoginDTO{
     username: string;
     password: string;
 }

@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { DeveloperService } from "../Services/DeveloperService";
 
-function useDevelopers() {
-    return useQuery({
+export function useDevelopers() {
+    const { data, isLoading, error } = useQuery({
         queryKey: ["developers"],
         queryFn: DeveloperService.getAll
     });
-}
 
-export default useDevelopers;
+    return {
+        developers: data?.dtos ?? [],
+        isLoadingDevelopers: isLoading,
+        developersError: error
+    }
+}

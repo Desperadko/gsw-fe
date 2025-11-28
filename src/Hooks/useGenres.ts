@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { GenreService } from "../Services/GenreService";
 
-function useGenres() {
-    return useQuery({
+export function useGenres() {
+    const { data, isLoading, error } = useQuery({
         queryKey: ["genres"],
-        queryFn: GenreService.getAll 
+        queryFn: GenreService.getAll
     });
-}
 
-export default useGenres;
+    return{
+        genres: data?.dtos ?? [],
+        isLoadingGenres: isLoading,
+        genresError: error,
+    }
+}

@@ -5,8 +5,6 @@ import type { PlatformDTO } from "../Platform/Platform";
 import type { PublisherDTO } from "../Publisher/Publisher";
 
 export interface ProductDTO extends BaseDTO {
-    id: number,
-    name: string,
     description: string,
     releaseDate: Date,
     price: number,

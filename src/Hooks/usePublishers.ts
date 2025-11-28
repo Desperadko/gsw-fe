@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { PlatformService } from "../Services/PlatformService";
+import { PublisherService } from "../Services/PublisherService";
 
-function usePublishers() {
-    return useQuery({
-        queryKey: ["platforms"],
-        queryFn: PlatformService.getAll
+export function usePublishers() {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["publishers"],
+        queryFn: PublisherService.getAll
     });
-}
 
-export default usePublishers;
+    return {
+        publishers: data?.dtos ?? [],
+        isLoadingPublishers: isLoading,
+        publishersError: error
+    }
+}

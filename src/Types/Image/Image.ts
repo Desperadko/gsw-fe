@@ -1,6 +1,4 @@
-import type { BaseDTO } from "../General/Base";
-
-export interface ImageMetaDTO extends BaseDTO {
+export interface ImageMetaDTO {
     fileName: string,
     url: string
 }
