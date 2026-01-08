@@ -6,15 +6,15 @@ import type { AddResponse } from "../Types/General/Add";
 import type { GetAllResponse } from "../Types/General/Get";
 
 export const DeveloperService = {
-    getAll: async (): Promise<GetAllResponse<DeveloperDTO>> => {
+    getAll: async () => {
         return apiInstance
-            .get(API_ENDPOINTS_CONSTANTS.DEVELOPER.GET_ALL)
+            .get<Promise<GetAllResponse<DeveloperDTO>>>(API_ENDPOINTS_CONSTANTS.DEVELOPER.GET_ALL)
             .then(response => response.data);
     },
 
-    add: async (request: AddDeveloperRequest): Promise<AddResponse<DeveloperDTO>> => {
+    add: async (request: AddDeveloperRequest) => {
         return apiInstance
-            .post(API_ENDPOINTS_CONSTANTS.DEVELOPER.POST_ADD, request)
+            .post<Promise<AddResponse<DeveloperDTO>>>(API_ENDPOINTS_CONSTANTS.DEVELOPER.POST_ADD, request)
             .then(response => response.data);
     }
 }

@@ -6,15 +6,15 @@ import type { AddPlatformRequest } from "../Types/Platform/Add";
 import type { PlatformDTO } from "../Types/Platform/Platform";
 
 export const PlatformService = {
-    getAll: async (): Promise<GetAllResponse<PlatformDTO>> => {
+    getAll: async () => {
         return apiInstance
-            .get(API_ENDPOINTS_CONSTANTS.PLATFORM.GET_ALL)
+            .get<Promise<GetAllResponse<PlatformDTO>>>(API_ENDPOINTS_CONSTANTS.PLATFORM.GET_ALL)
             .then(response => response.data);
     },
 
-    add: async (request: AddPlatformRequest): Promise<AddResponse<PlatformDTO>> => {
+    add: async (request: AddPlatformRequest) => {
         return apiInstance
-            .post(API_ENDPOINTS_CONSTANTS.PLATFORM.POST_ADD, request)
+            .post<Promise<AddResponse<PlatformDTO>>>(API_ENDPOINTS_CONSTANTS.PLATFORM.POST_ADD, request)
             .then(response => response.data);
     }
 }

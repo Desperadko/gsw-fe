@@ -1,14 +1,14 @@
 import { useState } from "react";
-import type { BaseDTO } from "../../../Types/General/Base";
+import type { BaseWithIdAndNameDTO } from "../../../Types/General/Base";
 
-interface MultiSelectAutocompleteProps<T extends BaseDTO> {
+interface MultiSelectAutocompleteProps<T extends BaseWithIdAndNameDTO> {
     suggestions: T[];
     selectedIds: number[];
     onSelectionChange: (selected: number[]) => void;
     placeholder?: string;
 }
 
-function MultiSelectAutocomplete<T extends BaseDTO>({ suggestions, selectedIds, onSelectionChange, placeholder } : MultiSelectAutocompleteProps<T>) {
+function MultiSelectAutocomplete<T extends BaseWithIdAndNameDTO>({ suggestions, selectedIds, onSelectionChange, placeholder } : MultiSelectAutocompleteProps<T>) {
     const [input, setInput] = useState<string>("");
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
@@ -40,37 +40,58 @@ function MultiSelectAutocomplete<T extends BaseDTO>({ suggestions, selectedIds, 
 
     return(
         <div
-            className="flex">
-            <input
-                type="text"
-                value={input}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => inputHandler(e.target.value)}
-                onFocus={() => setShowSuggestions(input.length > 0 && filteredSuggestions.length > 0)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                placeholder={placeholder}
-                className="
-                p-2"
-            />
+            className="
+                relative
+                flex items-center">
+            <div
+                className="relative">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => inputHandler(e.target.value)}
+                    onFocus={() => setShowSuggestions(input.length > 0 && filteredSuggestions.length > 0)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 300)}
+                    placeholder={placeholder}
+                    className="
+                        relative
+                        z-0
+                        p-2
+                        border-b-1"
+                />
 
-            {showSuggestions && (
-                <div>
-                    {filteredSuggestions.map(item => (
-                        <button
-                            key={item.id}
-                            onClick={() => selectHandler(item)}>
-                                {item.name}
-                        </button>
-                    ))}
-                </div>
-            )}
+                {showSuggestions && (
+                    <div
+                        className="
+                            absolute top-full
+                            z-20
+                            w-full
+                            bg-eerie-black">
+                        {filteredSuggestions.map(item => (
+                            <button
+                                key={item.id}
+                                onClick={() => selectHandler(item)}
+                                className="
+                                    z-20
+                                    w-full
+                                    text-left
+                                    p-1">
+                                    {item.name}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
+                
 
             {selectedItems && (
                 <div>
                     {selectedItems.map(item => (
                         <span
                             key={item.id}
-                            className="flex gap-1">
-                            {item.name}
+                            className="
+                                flex
+                                gap-1 ml-2">
+                                {item.name}
                             <button
                                 onClick={() => removeHandler(item)}>
                                 ×

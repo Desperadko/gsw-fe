@@ -1,4 +1,4 @@
-import type { BaseDTO } from "../General/Base";
+import type { BaseWithIdAndNameDTO } from "../General/Base";
 
-export interface GenreDTO extends BaseDTO {
+export interface GenreDTO extends BaseWithIdAndNameDTO {
 }

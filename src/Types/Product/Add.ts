@@ -5,7 +5,7 @@ export interface AddProductRequest {
 export interface ProductAddDTO {
     name: string,
     description: string,
-    releaseDate: Date,
+    releaseDate: string,
     price: number,
 
     developersIds: number[],

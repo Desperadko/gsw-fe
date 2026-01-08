@@ -29,6 +29,7 @@ export const API_ENDPOINTS_CONSTANTS = {
     },
     IMAGE: {
         GET_SINGLE: "api/image",
-        POST_ADD: "api/image"
+        POST_ADD: "api/image",
+        POST_ADD_DEFAULT: "api/image/default"
     }
 } as const;
