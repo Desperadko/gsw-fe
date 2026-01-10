@@ -6,6 +6,7 @@ import { useAuth } from "../../../Hooks/AuthProvider";
 import { ROUTES } from "../../../Constants/RoutesConstants";
 import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 import logo from "../../../Assets/logo.png"
+import ErrorMessage from "../../Components/ErrorMessage/ErrorMessage";
 
 function Register() {
     const fieldNames: string[] = ["username", "email", "password"];
@@ -27,7 +28,7 @@ function Register() {
         clearErrors(fieldNames);
 
         AccountService
-        .register({ username, email, password })
+        .register({credentials: { username, email, password }})
         .then(response => {
             login(response.token)
             navigate(ROUTES.HOME);
@@ -74,9 +75,7 @@ function Register() {
                             border-b-1 border-floral-white
                             p-2"/>
                     {errors && errors.username && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.username}
-                        </p>
+                        <ErrorMessage message={errors.username}/>
                     )}
                     <input
                         type="text"
@@ -88,9 +87,7 @@ function Register() {
                             border-b-1 border-floral-white
                             p-2"/>
                     {errors && errors.email && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.email}
-                        </p>
+                        <ErrorMessage message={errors.email}/>
                     )}
                     <input
                         type="password"
@@ -102,9 +99,7 @@ function Register() {
                             border-b-1 border-floral-white
                             p-2"/>
                     {errors && errors.password && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.password}
-                        </p>
+                        <ErrorMessage message={errors.password}/>
                     )}
                 </div>
                 <div className="flex justify-center items-center flex-col gap-4">
@@ -121,12 +116,10 @@ function Register() {
                     <button
                         onClick={redirectToLogin}
                         className="text-floral-white font-semibold">
-                            Don't have an account?
+                            Already have an account?
                     </button>
                     {errors && errors.general && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.general}
-                        </p>
+                        <ErrorMessage message={errors.general}/>
                     )}
                 </div>
             </div>

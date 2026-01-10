@@ -6,6 +6,7 @@ import { useAuth } from "../../../Hooks/AuthProvider";
 import { ROUTES } from "../../../Constants/RoutesConstants";
 import logo from "../../../Assets/logo.png"
 import { useErrorHandler } from "../../../Hooks/useErrorHandler";
+import ErrorMessage from "../../Components/ErrorMessage/ErrorMessage";
 
 function Login() {
     const fieldNames: string[] = ["username", "password"];
@@ -25,7 +26,7 @@ function Login() {
 
         clearErrors(fieldNames);
 
-        AccountService.login({username, password})
+        AccountService.login({credentials: {username, password}})
         .then(response => {
             login(response.token);
             navigate(ROUTES.HOME);
@@ -72,9 +73,7 @@ function Login() {
                             border-b-1 border-floral-white
                             p-2"/>
                     {errors && errors.username && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.username}
-                        </p>
+                        <ErrorMessage message={errors.username}/>
                     )}
                     <input
                         type="password"
@@ -86,9 +85,7 @@ function Login() {
                             border-b-1 border-floral-white
                             p-2"/>
                     {errors && errors.password && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.password}
-                        </p>
+                        <ErrorMessage message={errors.password}/>
                     )}
                 </div>
                 <div className="flex justify-center items-center flex-col gap-4">
@@ -108,9 +105,7 @@ function Login() {
                             Don't have an account?
                     </button>
                     {errors && errors.general && (
-                        <p className="text-red-500 font-semibold">
-                            {errors.general}
-                        </p>
+                        <ErrorMessage message={errors.general}/>
                     )}
                 </div>
             </div>
