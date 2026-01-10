@@ -13,6 +13,11 @@ import type { ApplicationError } from "../../../Types/Error";
 import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 import ErrorMessage from "../../Components/ErrorMessage/ErrorMessage";
 import type { AddDefaultImageRequest, AddImageRequest, ImageAddDTO } from "../../../Types/Image/Add";
+import InputItem from "../../Components/InputItem/InputItem";
+import type { AddGenreRequest, GenreAddDTO } from "../../../Types/Genre/Add";
+import type { AddPlatformRequest, PlatformAddDto } from "../../../Types/Platform/Add";
+import type { AddDeveloperRequest, DeveloperAddDTO } from "../../../Types/Developer/Add";
+import type { AddPublisherRequest, PublisherAddDTO } from "../../../Types/Publisher/Add";
 
 function Admin() {
     const [name, setName] = useState<string>("");
@@ -31,16 +36,18 @@ function Admin() {
     const fieldNames: string[] = [
         "name", "description", "releasedate",
         "price", "genresids", "platformsids",
-        "developersids", "publishersids", "productid", "imagedata"];
+        "developersids", "publishersids", "productid", "imagedata",
+        "genre.name", "platform.name", "developer.name", "publisher.name"
+    ];
 
     const { errors, processError, clearErrors } = useErrorHandler();
 
     const textAreaRef = useAutoExpandingTextarea(description, 15);
 
-    const { genres, isLoadingGenres } = useGenres();
-    const { platforms, isLoadingPlatforms } = usePlatforms();
-    const { developers, isLoadingDevelopers } = useDevelopers();
-    const { publishers, isLoadingPublishers } = usePublishers();
+    const { genres, isLoadingGenres, addGenre, isAddingGenre } = useGenres();
+    const { platforms, isLoadingPlatforms, addPlatform, isAddingPlatform } = usePlatforms();
+    const { developers, isLoadingDevelopers, addDeveloper, isAddingDeveloper } = useDevelopers();
+    const { publishers, isLoadingPublishers, addPublisher, isAddingPublisher } = usePublishers();
 
     const isLoading: boolean = isLoadingGenres || isLoadingPlatforms || isLoadingDevelopers || isLoadingPublishers;
     
@@ -62,7 +69,7 @@ function Admin() {
         setPublishersIds([]);
     }
 
-    async function handleSubmit(){
+    async function handleProductSubmit(){
         setIsLoadingSubmit(true);
 
         clearErrors(fieldNames);
@@ -108,11 +115,70 @@ function Admin() {
         }
         catch(error: unknown){
             processError(error as ApplicationError, fieldNames);
-            console.log(error);
         }
         finally{
             setIsLoadingSubmit(false);
         }
+    }
+
+    function handleGenreSubmit(name: string){
+        const genre: GenreAddDTO = {
+            name: name
+        }
+
+        const request: AddGenreRequest = {
+            genre: genre
+        }
+
+        addGenre(request)
+            .catch((errors: ApplicationError) => {
+                processError(errors, fieldNames);
+            });
+    }
+
+    function handlePlatformSubmit(name: string){
+        const platform: PlatformAddDto = {
+            name: name
+        }
+
+        const request: AddPlatformRequest = {
+            platform: platform
+        }
+
+        addPlatform(request)
+            .catch((error: ApplicationError) => {
+                processError(error, fieldNames);
+            });
+    }
+
+    function handleDeveloperSubmit(name: string){
+        const developer: DeveloperAddDTO = {
+            name: name
+        }
+
+        const request: AddDeveloperRequest = {
+            developer: developer
+        }
+
+        addDeveloper(request)
+            .catch((error: ApplicationError) => {
+                processError(error, fieldNames);
+            });
+    }
+
+    function handlePublisherSubmit(name: string) {
+        const publisher: PublisherAddDTO = {
+            name: name
+        }
+
+        const request: AddPublisherRequest = {
+            publisher: publisher
+        }
+
+        addPublisher(request)
+            .catch((error: ApplicationError) => {
+                processError(error, fieldNames);
+            });
     }
 
     if(isLoading) return <div>Loading...</div>
@@ -121,20 +187,21 @@ function Admin() {
         <div
             className="
             flex
+            flex-col
             justify-center items-center
-            max-w-175
-            mx-10 sm:mx-auto">
+            m-10
+            gap-20">
             <div className="
                 flex flex-col
                 justify-center items-center
-                my-10 sm:mx-10 mx-auto
-                sm:w-full
+                w-fit
                 gap-10">
-                <div className="flex
+                <div className="
+                    flex
                     flex-col sm:flex-row
                     sm:justify-between
                     w-full
-                    gap-10 sm:gap-0">
+                    gap-10">
                     <div className="flex justify-center items-center">
                         <InputImage
                             multiple={false}
@@ -207,13 +274,13 @@ function Admin() {
                         )}
                     </div>
                     <div className="flex flex-col justify-between">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-2">
                             <input
                                 type="date"
                                 placeholder="Release Date.."
                                 value={releaseDate}
                                 onChange={(e) => setReleaseDate(e.target.value)}
-                                className="p-2"/>
+                                className="p-2 border-b-1"/>
                             {errors && errors.releasedate && (
                                 <ErrorMessage message={errors.releasedate}/>
                             )}
@@ -224,7 +291,7 @@ function Admin() {
                                 step={0.01}
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                className="p-2"/>
+                                className="p-2 border-b-1"/>
                             {errors && errors.price && (
                                 <ErrorMessage message={errors.price}/>
                             )}
@@ -240,7 +307,7 @@ function Admin() {
                                     Clear
                             </button>
                             <button
-                                onClick={handleSubmit}
+                                onClick={handleProductSubmit}
                                 disabled={isLoadingSubmit}
                                 className="
                                     p-2
@@ -252,6 +319,55 @@ function Admin() {
                                     }
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                className="
+                    flex flex-col
+                    gap-15">
+                <div
+                    className="
+                        flex
+                        flex-col md:flex-row
+                        gap-15">
+                    <div className="w-75">
+                        <InputItem
+                            onSubmit={handleGenreSubmit}
+                            items={genres}
+                            isSubmitting={isAddingGenre}
+                            onSubmitError={errors["genre.name"]}
+                            placeholder="Genre.."/>
+                    </div>
+                    <div className="w-75">
+                        <InputItem
+                            onSubmit={handlePlatformSubmit}
+                            items={platforms}
+                            isSubmitting={isAddingPlatform}
+                            onSubmitError={errors["platform.name"]}
+                            placeholder="Platform.."/>
+                    </div>
+                </div>
+                <div
+                    className="
+                        flex
+                        flex-col md:flex-row
+                        gap-15">
+                    <div className="w-75">
+                        <InputItem
+                            onSubmit={handleDeveloperSubmit}
+                            items={developers}
+                            isSubmitting={isAddingDeveloper}
+                            onSubmitError={errors["developer.name"]}
+                            placeholder="Developer.."/>
+                    </div>
+                    <div className="w-75">
+                        <InputItem
+                            onSubmit={handlePublisherSubmit}
+                            items={publishers}
+                            isSubmitting={isAddingPublisher}
+                            onSubmitError={errors["publisher.name"]}
+                            placeholder="Publisher.."/>
                     </div>
                 </div>
             </div>
