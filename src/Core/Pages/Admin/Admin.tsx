@@ -112,6 +112,8 @@ function Admin() {
 
                 await ImageService.addDefault(request);
             }
+
+            handleClear();
         }
         catch(error: unknown){
             processError(error as ApplicationError, fieldNames);

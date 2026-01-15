@@ -17,8 +17,6 @@ function InputItem({ onSubmit, isSubmitting = false, onSubmitError, items, place
       onSubmit(name);
     }
 
-    console.log(onSubmitError);
-    
     return(
         <div
           className="
