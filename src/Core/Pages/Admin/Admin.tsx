@@ -18,6 +18,7 @@ import type { AddGenreRequest, GenreAddDTO } from "../../../Types/Genre/Add";
 import type { AddPlatformRequest, PlatformAddDto } from "../../../Types/Platform/Add";
 import type { AddDeveloperRequest, DeveloperAddDTO } from "../../../Types/Developer/Add";
 import type { AddPublisherRequest, PublisherAddDTO } from "../../../Types/Publisher/Add";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 function Admin() {
     const [name, setName] = useState<string>("");
@@ -183,7 +184,7 @@ function Admin() {
             });
     }
 
-    if(isLoading) return <div>Loading...</div>
+    if(isLoading) return <LoadingSpinner/>
 
     return(
         <div

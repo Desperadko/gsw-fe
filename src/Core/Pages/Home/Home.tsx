@@ -4,10 +4,11 @@ import { ProductService } from "../../../Services/ProductService";
 import type { GetProductsRequest } from "../../../Types/Product/Get";
 import ProductCard from "../../Components/ProductCard/ProductCard";
 import ProductStrip from "../../Components/ProductStrip/ProductStrip";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 function Home() {
   const [latestProducts, setLatestProducts] = useState<ProductDTO[]>([]);
-  const [blizzardProducts, setBlizzardProducts] = useState<ProductDTO[]>([]);
+  const [cheapestProducts, setBlizzardProducts] = useState<ProductDTO[]>([]);
   const [newReleases, setNewReleases] = useState<ProductDTO[]>([]);
   const [allProducts, setAllProducts] = useState<ProductDTO[]>([]);
 
@@ -23,15 +24,15 @@ function Home() {
             pagination: { page: 1, size: 4 }
         };
 
-        const blizzardRequest: GetProductsRequest = {
-            filter: { developersIds: [1] },
-            sort: undefined,
+        const byPriceRequest: GetProductsRequest = {
+            filter: undefined,
+            sort: { sortBy: "price", sortDirection: "desc" },
             pagination: { page: 1, size: 5 }
           };
         
         const newReleasesRequest: GetProductsRequest = {
           filter: undefined,
-          sort: { sortBy: "releasedate", sortDirection: "desc" },
+          sort: { sortBy: "price", sortDirection: "desc" },
           pagination: { page: 1, size: 5 }
         }
 
@@ -44,7 +45,7 @@ function Home() {
         try {
           const [latestResponse, blizzardResponse, releasesResponse, allProductsResponse] = await Promise.all([
             ProductService.getAll(latestRequest),
-            ProductService.getAll(blizzardRequest),
+            ProductService.getAll(byPriceRequest),
             ProductService.getAll(newReleasesRequest),
             ProductService.getAll(allProductsRequest),
           ]);
@@ -62,7 +63,7 @@ function Home() {
 
   }, [])
   
-  if(loading) return <div>Loading...</div>
+  if(loading) return <LoadingSpinner/>
   
   return(
     <div
@@ -142,13 +143,13 @@ function Home() {
               tracking-wide
               border-b-1
               pb-2 mb-10">
-                Blizzard Hits
+                Cheapest
           </h3>
           <div
             className="
             flex flex-col
             gap-4">
-            {blizzardProducts?.map((product) => {
+            {cheapestProducts?.map((product) => {
               return(
                 <ProductStrip
                   product={product}
