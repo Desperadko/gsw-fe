@@ -14,5 +14,5 @@ export interface ProductDTO extends BaseWithIdAndNameDTO {
     genres: GenreDTO[],
     platforms: PlatformDTO[],
 
-    imageUrl?: string
+    imageURL?: string
 }

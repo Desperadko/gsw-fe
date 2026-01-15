@@ -10,6 +10,7 @@ export const apiInstance = axios.create({
     headers: {
         "Content-type": "application/json"
     },
+    paramsSerializer: (params) => serializeParams(params),
     timeout: 10_000
 });
 
@@ -93,4 +94,26 @@ function isFluentValidationError(error: UnifiedError): error is FluentValidation
 
 function isCustomApiError(error: UnifiedError): error is ErrorResponse {
     return "message" in error && "field" in error;
+}
+
+function serializeParams(obj: Record<string, any>, prefix = ''): string {
+    const parts: string[] = [];
+
+    for (const key in obj) {
+        if (obj[key] === undefined || obj[key] === null) continue;
+
+        const fullKey = prefix ? `${prefix}.${key}` : key;
+
+        if (Array.isArray(obj[key])) {
+            obj[key].forEach((val: any, i: number) => {
+                parts.push(`${fullKey}[${i}]=${encodeURIComponent(val)}`);
+            });
+        } else if (typeof obj[key] === 'object') {
+            parts.push(serializeParams(obj[key], fullKey));
+        } else {
+            parts.push(`${fullKey}=${encodeURIComponent(obj[key])}`);
+        }
+    }
+
+    return parts.filter(Boolean).join('&');
 }

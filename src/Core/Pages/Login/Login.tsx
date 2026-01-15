@@ -7,6 +7,7 @@ import { ROUTES } from "../../../Constants/RoutesConstants";
 import logo from "../../../Assets/logo.png"
 import { useErrorHandler } from "../../../Hooks/useErrorHandler";
 import ErrorMessage from "../../Components/ErrorMessage/ErrorMessage";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 function Login() {
     const fieldNames: string[] = ["username", "password"];
@@ -43,7 +44,7 @@ function Login() {
         navigate(ROUTES.REGISTER);
     }
     
-    if(loading) return <div>Loading...</div>
+    if(loading) return <LoadingSpinner/>
 
     return(
         <div

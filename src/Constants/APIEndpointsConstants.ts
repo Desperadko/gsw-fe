@@ -9,6 +9,7 @@ export const API_ENDPOINTS_CONSTANTS = {
     },
     PRODUCT: {
         GET_SINGLE: "api/product",
+        GET_MULTIPLE: "api/product",
         POST_ADD: "api/product"
     },
     GENRE: {
